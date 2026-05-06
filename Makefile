@@ -3,11 +3,17 @@
 GPP := g++
 SFML_VERSION := 2.5.1
 
-SFML_LIB := /usr/local/lib/SFML-$(SFML_VERSION)/lib
-SFML_HEADERS := /usr/local/lib/SFML-$(SFML_VERSION)/include
-
-FLAGS := -O2 -march=native -Wall -Werror -Wextra -pedantic -std=c++23 -L $(SFML_LIB) -I $(SFML_HEADERS)
-LIBS := -lsfml-graphics -lsfml-window -lsfml-system
+ifeq ($(OS),Windows_NT)
+    SFML_LIB ?= /c/SFML/lib
+    SFML_HEADERS ?= /c/SFML/include
+    FLAGS := -O2 -Wall -Werror -Wextra -std=c++23 -L $(SFML_LIB) -I $(SFML_HEADERS)
+    LIBS := -lsfml-graphics -lsfml-window -lsfml-system -lopengl32 -lgdi32 -lwinmm -lws2_32 -luser32 -lkernel32 -lshell32
+else
+    SFML_LIB ?= /usr/local/lib/SFML-$(SFML_VERSION)/lib
+    SFML_HEADERS ?= /usr/local/lib/SFML-$(SFML_VERSION)/include
+    FLAGS := -O2 -march=native -Wall -Werror -Wextra -pedantic -std=c++23 -L $(SFML_LIB) -I $(SFML_HEADERS)
+    LIBS := -lsfml-graphics -lsfml-window -lsfml-system
+endif
 
 # Final binary
 BIN := editor
